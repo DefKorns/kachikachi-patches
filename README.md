@@ -2,20 +2,17 @@
 
 Pull the hidden "fix list" out of the NES/Famicom Classic Edition and turn it into a normal patch file you can use on a flash cart or an emulator.
 
-## The idea, like you're five
+## What this is
 
-Imagine the console has a library of books (the game ROMs). Nintendo did not reprint the book to fix a typo. Instead there is a sticky-note list taped inside the console's player (the emulator, a program called `kachikachi`). The list says "page 5, line 3: change this word to that word". When you open the book, the player quietly applies the notes.
+The game ROMs inside the console were not edited to fix typos. The fixes live in a list inside the emulator program, `kachikachi`. Each entry says "at this position in the ROM, write these bytes". When a game starts, the emulator applies the list on the fly.
 
-So the ROM file in the console still has the typo, but what you see on screen is fixed. For example:
+That is why the Zelda ROM in the console still says "PENNINSULA" but the game on screen says "PENINSULA", and why the intro text shows the newer, rewritten version.
 
-- The Legend of Zelda says "PENNINSULA" in the ROM, and the player swaps it for "PENINSULA".
-- The Zelda intro text is replaced with the newer, rewritten version.
-
-This tool reads that sticky-note list and writes it out as an **IPS patch**, which is the usual file format for "change these bytes in that ROM". You can then apply it to your own copy of the game.
+This tool reads that list and writes it out as an **IPS patch**, the usual format for "change these bytes in that ROM". You can then apply it to your own copy of the game.
 
 ## What you need
 
-1. **Node.js** (version 14 or newer). Get it from https://nodejs.org. Check it works: open a terminal and type `node --version`.
+1. **Node.js** (version 14 or newer). Get it from [nodejs.org](https://nodejs.org). Check it works: open a terminal and type `node --version`.
 2. **The emulator program from the console firmware.** The firmware is a file ending in `.hsqs`. It is a compressed disk image. Open it with **7-Zip** (the free program) and copy out one file: `usr/bin/kachikachi`. It is about 440 KB and has no extension.
 3. **A clean copy of the game to patch** (the "base ROM"). This repository does not include any ROMs and does not tell you where to get one. Use your own dump.
    - For the NES Zelda, the base is the **USA, Rev 0** version, with the 16-byte iNES header (the file is 131088 bytes). The Zelda ROM inside the NES Classic firmware is the same game.
@@ -107,6 +104,10 @@ Each fix in the list is a small block:
 | data | `length` bytes | the new bytes, stored 0x3C bytes **before** the position/length part |
 
 Fixes are 64-byte aligned and separated by zeros, so the tool cuts the file at runs of zeros and checks that each piece looks like a real fix.
+
+## Thanks
+
+To [u/nmj79](https://www.reddit.com/user/nmj79), whose question in [r/RockinTheClassics](https://www.reddit.com/r/RockinTheClassics/comments/1xzydxa/how_did_the_nes_classic_edition_patch_the_legend/) about how the NES Classic Zelda gets its "peninsula" fix started all of this.
 
 ## License
 
